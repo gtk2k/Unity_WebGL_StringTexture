@@ -1,6 +1,5 @@
-using System.Collections;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class StringTexture : MonoBehaviour
 {
@@ -14,8 +13,8 @@ public class StringTexture : MonoBehaviour
 
     void Start()
     {
-        StringTextureLib.OnTextureCreated += StringTextureLib_OnTextureCreated;
-        StringTextureLib.CreateStringTexture(
+        // 文字列をブラウザー側でレンダリングして文字列画像を生成し、レンダリング結果のサイズを取得
+        var renderSize = StringTextureLib.StringTextureLib_CreateStringImage(
             Text,
             FontFamily,
             FontWeight,
@@ -23,20 +22,22 @@ public class StringTexture : MonoBehaviour
             TextColor,
             TextureWidth,
             TextureHeight);
-    }
 
-    private void StringTextureLib_OnTextureCreated(string url)
-    {
-        StartCoroutine(LoadTexture(url));
-    }
+        var renderWidth = renderSize / 10000;
+        var renderHeight = renderSize % 10000;
 
-    private IEnumerator LoadTexture(string url)
-    {
-        var req = UnityWebRequestTexture.GetTexture(url);
-        yield return req.SendWebRequest();
-        var tex = ((DownloadHandlerTexture)req.downloadHandler).texture;
-        transform.localScale = new Vector3(transform.localScale.x, transform.localScale.x * (float)tex.height / (float)tex.width, transform.localScale.z);
-        GetComponent<Renderer>().material.mainTexture = tex;
-        StringTextureLib.StringTextureLib_ReleaseObjectUrl(url);
+        // 今回は幅に合わせてGameObjectのサイズを変更
+        transform.localScale = new Vector3(1f, (float)renderHeight / (float)renderWidth, 1f);
+
+        // レンダリングサイズでレンダーテクスチャーを生成
+        var rt = new RenderTexture(renderWidth, renderHeight, 0, RenderTextureFormat.ARGB32, 0);
+        var cb = rt.colorBuffer; // <- これをしないとテクスチャーポインター (textureId) 取得できない
+        var textureId = (int)rt.GetNativeTexturePtr();
+        GetComponent<Renderer>().material.mainTexture = rt;
+        Debug.Log($"TextureWidth: {TextureWidth}, TextureHeight:{TextureHeight}, textureId:{textureId}");
+
+        // レンダーテクスチャーに文字列画像を描画
+        StringTextureLib.StringTextureLib_DrawStringTexture(textureId);
+
     }
 }

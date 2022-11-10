@@ -159,7 +159,7 @@ MonoBehaviour:
   Text: "\u30C6\u30B9\u30C8\U0001F46A\U0001F46A\U0001F46A\U0001F46A\U0001F46A\U0001F468\u200D\U0001F469\u200D\U0001F466\U0001F468\u200D\U0001F469\u200D\U0001F466\U0001F468\u200D\U0001F469\u200D\U0001F467\u30C6\u30B9\u30C8\uC548\uB155\uD558\uC138\uC694"
   FontFamily: monospace
   FontWeight: normal
-  FontSize: 40px
+  FontSize: 60px
   TextColor: green
   TextureWidth: 512
   TextureHeight: 0
@@ -425,7 +425,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
